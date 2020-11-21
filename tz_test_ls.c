@@ -23,10 +23,10 @@ main (int argc, char **argv)
 
 	while ((cmd_options = getopt(argc, argv, "hl::")) != -1) {
 		switch (cmd_options) {
-		case 'l':
+		case 'l':				/* LIST OPTION */
 			list_status = list_status | LIST;
 			break;
-		case 'h':
+		case 'h':				/* HELP OPTION */
 			list_status = list_status | HELP;
 			break;
 		default:
@@ -34,18 +34,22 @@ main (int argc, char **argv)
 			errmsg("Unknown option `-%c'.\n", cmd_options);
 			break;
 		}
-	}
 
-	if (list_status & HELP) {
-		show_help(argv[0]);
-	} else if (list_status & ERROR) {
+		if (list_status & ERROR) {			/* ABORT EXECUTION*/
+			break;
+		}
+
+	}
+	if (list_status & ERROR) {				/* SET ERROR CODE */
 		ret_status = EXIT_FAILURE;
-	} else {
+	} else if (list_status & HELP) {		/* SHOW HELP */
+		show_help(argv[0]);
+	} else {								/* SHOW LIST FILE */
 		for (index = optind; index < argc; index++) {
 			path_size += strlen(argv[index]) + 1;
 		}
 
-		if (path_size) {
+		if (path_size) {					/* PATH TAKE FROM INPUT */
 			int copy_index = 0;
 			search_path = new(path_size + 1);
 
@@ -56,7 +60,7 @@ main (int argc, char **argv)
 				strcpy(search_path + copy_index, argv[index]);
 				copy_index += strlen(argv[index]);
 			}
-		} else {
+		} else {							/* PATH TAKE FROM ENVEROMENT */
 			char *pwd_path = getenv("PWD");
 			if (pwd_path) {
 				path_size = strlen(pwd_path);
@@ -65,11 +69,11 @@ main (int argc, char **argv)
 			}
 		}
 
-		if (search_path) {
+		if (search_path) {					/* LIST PATH SET */
 			printf("Path:%s\n", search_path);
-			if (access(search_path, F_OK)==0) {
+			if (access(search_path, F_OK)==0) {	/* PATH FOUND */
 				list_dir(search_path,list_status & LIST);
-			} else {
+			} else {							/* PATH NOT FOUND */
 				ret_status = OBJ_NOT_FOUND;
 				errmsg("Path %s - not found.", search_path);
 			}

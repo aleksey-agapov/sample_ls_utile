@@ -22,7 +22,11 @@
 
 void list_file_info(const char * path_item, const char* item_name);
 
-
+/**
+ * Show error message.
+ *
+ * @param error arg list.
+ */
 void errmsg( const char* format, ... )
 {
   va_list arglist;
@@ -32,6 +36,11 @@ void errmsg( const char* format, ... )
   va_end( arglist );
 }
 
+/**
+ * Show help.
+ *
+ * @param app_name for show.
+ */
 void show_help(char * app_name){
 	puts("!!!========================================================!!!"); /*  */
 	printf("exec:%s [options] <path>\n",  basename(app_name));
@@ -41,6 +50,12 @@ void show_help(char * app_name){
 	puts("!!!========================================================!!!"); /*  */
 }
 
+/**
+ * Show help.
+ *
+ * @param app_name for show.
+ * @return pointer to memory.
+ */
 char * new(size_t mem_size) {
 	char * mem_buf = malloc(mem_size);
 	if (mem_buf) {
@@ -52,7 +67,12 @@ char * new(size_t mem_size) {
 	return mem_buf;
 }
 
-
+/**
+ * Show Dir list.
+ *
+ * @param path - Path for list
+ * @param is_list - is list.
+ */
 void list_dir(const char *path, int is_list) {
 	DIR *d;
 	struct dirent *dir;
@@ -83,7 +103,13 @@ void list_dir(const char *path, int is_list) {
 		free (item_full_path);
 	}
 }
-
+/**
+ * Convert mode_t to String.
+ *
+ * @param mode_buffer - String buffert
+ * @param obj_mode - mode_t.
+ * @return pointer to buffer.
+ */
 const char * mode_to_string(char *mode_buffer, mode_t obj_mode)
  {
 	int count = 0;
